@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cisira Primary School | Peddie, South Africa</title>
+  <meta name="description" content="Official website for Cisira Primary School. Discover our mission, academic programs, events, and how you can support our learners."/>
+
+  <!-- Professional Fonts (Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Custom TailwindCSS Configuration
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Poppins', 'sans-serif'],
+          },
+          colors: {
+            primary: { DEFAULT: '#0D47A1', '50': '#E3F2FD', '100': '#BBDEFB', '600': '#1976D2', '700': '#1565C0', '800': '#0D47A1' },
+            secondary: { DEFAULT: '#4CAF50', '600': '#43A047' },
+            neutral: { '50': '#f8fafc', '100': '#f1f5f9', '200': '#e2e8f0', '300': '#cbd5e1', '400': '#94a3b8', '500': '#64748b', '600': '#475569', '700': '#334155', '800': '#1e293b', '900': '#0f172a' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Professional Styling & State Management */
+    *:focus-visible { outline: 2px solid #1976D2; outline-offset: 2px; border-radius: 6px; }
+    .modal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+    .modal-content { transition: transform 0.3s ease; }
+
+    /* Login State Visibility */
+    .logged-in-view { display: none; }
+    .logged-out-view { display: flex; }
+    body.user-is-logged-in .logged-in-view { display: flex; }
+    body.user-is-logged-in .logged-out-view { display: none; }
+
+    /* Recurring Donation Toggle Switch */
+    .toggle-checkbox:checked { right: 0; border-color: #4CAF50; }
+    .toggle-checkbox:checked + .toggle-label { background-color: #4CAF50; }
+	/* Flip Card Styles */
+    .flip-card { perspective: 1000px; }
+    .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.7s; transform-style: preserve-3d; }
+    .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+    .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; }
+    .flip-card-back { transform: rotateY(180deg); }
+  </style>
+</head>
+<!-- Header & Navigation -->
+<header class="sticky top-0 z-40 bg-white/90 backdrop-blur-lg border-b border-neutral-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="#home" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-primary-800 grid place-items-center text-white font-bold font-display">CCP</div>
+          <div class="leading-tight">
+            <p class="font-display font-bold text-lg text-neutral-900">Cisira Combined Primary School</p>
+            <p class="text-xs text-neutral-500">P.O. Box 148, Peddie, 5640, South Africa</p>
+          </div>
+        </a>
+        <nav class="hidden md:flex items-center gap-1 font-medium text-neutral-600">
+          <a href="#home" class="px-3 py-2 rounded-md hover:bg-neutral-100 hover:text-primary-800 transition-colors">Home</a>
+          <a href="#about" class="px-3 py-2 rounded-md hover:bg-neutral-100 hover:text-primary-800 transition-colors">About</a>
+          <a href="#academics" class="px-3 py-2 rounded-md hover:bg-neutral-100 hover:text-primary-800 transition-colors">Academics</a>
+          <a href="#donate" class="px-3 py-2 rounded-md hover:bg-neutral-100 hover:text-primary-800 transition-colors">Donate</a>
+          <a href="#contact" class="px-3 py-2 rounded-md hover:bg-neutral-100 hover:text-primary-800 transition-colors">Contact</a>
+        </nav>
+        <div class="hidden md:flex items-center gap-3">
+           <!-- Logged Out View -->
+           <div class="logged-out-view items-center gap-3">
+             <button id="loginBtn" class="px-4 py-2 text-sm font-semibold rounded-lg border border-neutral-300 hover:bg-neutral-100 transition-colors">Login</button>
+             <button id="signupBtn" class="px-4 py-2 text-sm font-semibold rounded-lg bg-primary-800 text-white hover:bg-primary-700 transition-colors">Signup</button>
+           </div>
+           <!-- Logged In View -->
+           <div class="logged-in-view items-center gap-4">
+             <span id="welcomeMessage" class="text-sm text-neutral-600 font-medium"></span>
+             <button id="logoutBtn" class="px-4 py-2 text-sm font-semibold rounded-lg bg-neutral-700 text-white hover:bg-neutral-800 transition-colors">Logout</button>
+           </div>
+        </div>
+        <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-neutral-300" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden border-t border-neutral-200 bg-white">
+      <!-- Mobile menu content is dynamically generated by JavaScript -->
+    </div>
+</header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden">
+        <!-- Background Image Container -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 grid grid-cols-1 md:grid-cols-2">
+                <!-- Image 1 -->
+                <div class="h-full w-full">
+                    <img src="img/child.jpg" 
+                         alt="Children learning in a vibrant classroom" 
+                         class="h-full w-full object-cover">
+                </div>
+                <!-- Image 2 (hidden on small screens) -->
+                <div class="h-full w-full hidden md:block">
+                     <img src="img/cisira.jpg" 
+                          alt="Students celebrating their academic success" 
+                          class="h-full w-full object-cover">
+                </div>
+            </div>
+            <!-- Dark Overlay -->
+            <div class="absolute inset-0 bg-black/60"></div>
+        </div>
+
+        <!-- Foreground Content -->
+        <div class="relative z-10 text-white p-4">
+            <h1 class="font-display text-5xl md:text-7xl font-extrabold" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">
+                Welcome to <span class="text-primary-100">Cisira Primary School</span>
+            </h1>
+            <p class="mt-4 text-lg md:text-xl max-w-3xl mx-auto" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.7);">
+                Fostering a balanced education, strong values, and a caring community to prepare learners for life.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-4 justify-center">
+              <a href="#about" 
+                 class="inline-block rounded-lg bg-transparent border-2 border-white px-8 py-3 text-lg font-semibold text-white hover:bg-white hover:text-primary-800 transition-all duration-300">
+                 Learn More
+              </a>
+              <a href="#donate" 
+                 data-requires-auth 
+                 class="inline-block rounded-lg bg-primary-800 border-2 border-primary-800 px-8 py-3 text-lg font-semibold text-white hover:bg-primary-700 hover:border-primary-700 transition-all duration-300">
+                 Donate Now
+              </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+<section id="about" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h2 class="font-display text-3xl md:text-4xl font-extrabold text-neutral-900">About Our School</h2>
+      <p class="mt-4 text-neutral-600 max-w-2xl mx-auto">Cisira Primary School in Peddie is dedicated to providing a balanced education, instilling high standards of morality, discipline, and respect for all.</p>
+    </div>
+    <div class="mt-12 grid md:grid-cols-2 gap-8">
+        <div class="rounded-xl bg-neutral-50 p-8 border border-neutral-200">
+          <h3 class="font-display font-bold text-lg text-primary-800">Our Mission</h3>
+          <p class="text-neutral-700 mt-2">To provide a balanced education and instill the highest standards of morality, discipline, and respect for others, regardless of their background.</p>
+        </div>
+        <div class="rounded-xl bg-neutral-50 p-8 border border-neutral-200">
+          <h3 class="font-display font-bold text-lg text-primary-800">Our Vision</h3>
+          <p class="text-neutral-700 mt-2">To equip learners with the knowledge, skills, and values needed for life and secondary education, empowering them to build a brighter future.</p>
+        </div>
+    </div>
+    <!-- Staff Section -->
+    <div class="mt-24">
+      <h2 class="font-display text-3xl font-extrabold text-neutral-900 text-center">Meet Our Staff</h2>
+      <p class="mt-4 text-neutral-600 max-w-2xl mx-auto text-center">Our dedicated team of educators and support staff are the heart of our school.</p>
+      <div class="mt-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8">
+        
+        <!-- Staff Member Card with Animation -->
+        <div class="text-center group">
+          <div class="relative w-32 h-32 mx-auto">
+            <img class="rounded-full object-cover w-full h-full ring-4 ring-neutral-200 group-hover:scale-110 group-hover:shadow-xl transition-all duration-300 ease-in-out" 
+                 src="img/Principal.jpg" 
+                 alt="Photo of Mr. Rweqana">
+          </div>
+          <h4 class="mt-4 font-bold text-neutral-800">Mr. Rweqana</h4>
+          <p class="text-sm text-primary-800 font-medium">Principal</p>
+        </div>
+
+        <!-- Staff Member Card with Animation -->
+        <div class="text-center group">
+          <div class="relative w-32 h-32 mx-auto">
+            <img class="rounded-full object-cover w-full h-full ring-4 ring-neutral-200 group-hover:scale-110 group-hover:shadow-xl transition-all duration-300 ease-in-out" 
+                 src="img/deputy.jpg" 
+                 alt="Photo of a staff member">
+          </div>
+          <h4 class="mt-4 font-bold text-neutral-800">Mrs. Dlamini</h4>
+          <p class="text-sm text-primary-800 font-medium">Deputy Principal</p>
+        </div>
+
+        <!-- Staff Member Card with Animation -->
+        <div class="text-center group">
+          <div class="relative w-32 h-32 mx-auto">
+            <img class="rounded-full object-cover w-full h-full ring-4 ring-neutral-200 group-hover:scale-110 group-hover:shadow-xl transition-all duration-300 ease-in-out" 
+                 src="img/staff1.jpg" 
+                 alt="Photo of a staff member">
+          </div>
+          <h4 class="mt-4 font-bold text-neutral-800">Mr. Botha</h4>
+          <p class="text-sm text-primary-800 font-medium">Head of Department</p>
+        </div>
+
+        <!-- Staff Member Card with Animation -->
+        <div class="text-center group">
+          <div class="relative w-32 h-32 mx-auto">
+            <img class="rounded-full object-cover w-full h-full ring-4 ring-neutral-200 group-hover:scale-110 group-hover:shadow-xl transition-all duration-300 ease-in-out" 
+                 src="img/Staff.jpg" 
+                 alt="Photo of a staff member">
+          </div>
+          <h4 class="mt-4 font-bold text-neutral-800">Ms. Fikeni</h4>
+          <p class="text-sm text-primary-800 font-medium">Grade R Teacher</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- Academics & Activities -->
+<section id="academics" class="py-24 bg-neutral-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h2 class="font-display text-3xl md:text-4xl font-extrabold text-neutral-900">Learning & Enrichment</h2>
+      <p class="mt-4 text-neutral-600 max-w-3xl mx-auto">We provide a strong academic foundation complemented by a diverse range of extracurricular activities to ensure the holistic development of every learner.</p>
+    </div>
+
+    <!-- Core Subjects -->
+    <div class="mt-16">
+      <h3 class="font-display text-2xl font-bold text-neutral-800 text-center">Core Subjects</h3>
+      <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- Mathematics Flip Card -->
+        <div class="flip-card h-80 rounded-2xl">
+          <div class="flip-card-inner rounded-2xl shadow-sm">
+            <div class="flip-card-front rounded-2xl bg-white p-6 border border-neutral-200 flex flex-col justify-center items-center text-center">
+              <div class="w-16 h-16 rounded-full bg-primary-50 grid place-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h3m-3-10h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M12 7h.01" /></svg>
+              </div>
+              <h4 class="font-display text-xl font-bold mt-4 text-neutral-900">Mathematics</h4>
+              <p class="text-sm text-neutral-400 mt-2 font-medium">Click to view details</p>
+            </div>
+            <div class="flip-card-back rounded-2xl bg-primary-800 p-6 text-white flex flex-col justify-center text-left">
+              <h4 class="font-display text-lg font-bold">Mathematics</h4>
+              <p class="mt-2 text-sm">Our curriculum focuses on building a strong foundation in numeracy and logical reasoning.</p>
+              <ul class="mt-4 space-y-2 text-sm list-disc list-inside">
+                <span class="font-semibold">Key Focus Areas:</span>
+                <li>Problem Solving</li>
+                <li>Data Handling</li>
+                <li>Shapes and Measurement</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- English Flip Card -->
+        <div class="flip-card h-80 rounded-2xl">
+          <div class="flip-card-inner rounded-2xl shadow-sm">
+            <div class="flip-card-front rounded-2xl bg-white p-6 border border-neutral-200 flex flex-col justify-center items-center text-center">
+              <div class="w-16 h-16 rounded-full bg-primary-50 grid place-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+              </div>
+              <h4 class="font-display text-xl font-bold mt-4 text-neutral-900">English (First Additional Language)</h4>
+              <p class="text-sm text-neutral-400 mt-2 font-medium">Click to view details</p>
+            </div>
+            <div class="flip-card-back rounded-2xl bg-primary-800 p-6 text-white flex flex-col justify-center text-left">
+              <h4 class="font-display text-lg font-bold">English (FAL)</h4>
+              <p class="mt-2 text-sm">We develop strong literacy skills to foster confident communication.</p>
+              <ul class="mt-4 space-y-2 text-sm list-disc list-inside">
+                <span class="font-semibold">Key Focus Areas:</span>
+                <li>Reading & Comprehension</li>
+                <li>Creative Writing</li>
+                <li>Spelling and Grammar</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Life Skills Flip Card -->
+        <div class="flip-card h-80 rounded-2xl">
+          <div class="flip-card-inner rounded-2xl shadow-sm">
+            <div class="flip-card-front rounded-2xl bg-white p-6 border border-neutral-200 flex flex-col justify-center items-center text-center">
+              <div class="w-16 h-16 rounded-full bg-primary-50 grid place-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              </div>
+              <h4 class="font-display text-xl font-bold mt-4 text-neutral-900">Life Skills</h4>
+              <p class="text-sm text-neutral-400 mt-2 font-medium">Click to view details</p>
+            </div>
+            <div class="flip-card-back rounded-2xl bg-primary-800 p-6 text-white flex flex-col justify-center text-left">
+              <h4 class="font-display text-lg font-bold">Life Skills</h4>
+              <p class="mt-2 text-sm">Equipping learners with essential skills for personal and social well-being.</p>
+              <ul class="mt-4 space-y-2 text-sm list-disc list-inside">
+                <span class="font-semibold">Key Focus Areas:</span>
+                <li>Personal Health & Safety</li>
+                <li>Social Responsibility</li>
+                <li>Beginning Knowledge</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extracurricular Activities -->
+    <div class="mt-20">
+      <h3 class="font-display text-2xl font-bold text-neutral-800 text-center">Extracurricular Activities</h3>
+      <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        
+        <!-- Football Flip Card -->
+        <div class="flip-card h-80 rounded-2xl">
+          <div class="flip-card-inner rounded-2xl shadow-sm">
+            <div class="flip-card-front rounded-2xl bg-white p-6 border border-neutral-200 flex flex-col justify-center items-center text-center">
+              <div class="w-16 h-16 rounded-full bg-secondary/10 grid place-items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-secondary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
+              <h4 class="font-display text-xl font-bold mt-4 text-neutral-900">Football (Soccer)</h4>
+              <p class="text-sm text-neutral-400 mt-2 font-medium">Click to view details</p>
+            </div>
+            <div class="flip-card-back rounded-2xl bg-secondary-600 p-6 text-white flex flex-col justify-center">
+              <h4 class="font-display text-lg font-bold">Football</h4>
+              <p class="mt-2 text-sm">Learners develop teamwork, discipline, and physical fitness while enjoying the beautiful game.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Netball Flip Card -->
+        <div class="flip-card h-80 rounded-2xl">
+          <div class="flip-card-inner rounded-2xl shadow-sm">
+            <div class="flip-card-front rounded-2xl bg-white p-6 border border-neutral-200 flex flex-col justify-center items-center text-center">
+              <div class="w-16 h-16 rounded-full bg-secondary/10 grid place-items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-secondary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></div>
+              <h4 class="font-display text-xl font-bold mt-4 text-neutral-900">Netball</h4>
+              <p class="text-sm text-neutral-400 mt-2 font-medium">Click to view details</p>
+            </div>
+            <div class="flip-card-back rounded-2xl bg-secondary-600 p-6 text-white flex flex-col justify-center">
+              <h4 class="font-display text-lg font-bold">Netball</h4>
+              <p class="mt-2 text-sm">Our netball teams focus on strategic thinking, agility, and sportsmanship in a competitive environment.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Creative Arts Flip Card -->
+        <div class="flip-card h-80 rounded-2xl">
+          <div class="flip-card-inner rounded-2xl shadow-sm">
+            <div class="flip-card-front rounded-2xl bg-white p-6 border border-neutral-200 flex flex-col justify-center items-center text-center">
+              <div class="w-16 h-16 rounded-full bg-secondary/10 grid place-items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-secondary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg></div>
+              <h4 class="font-display text-xl font-bold mt-4 text-neutral-900">Creative Arts</h4>
+              <p class="text-sm text-neutral-400 mt-2 font-medium">Click to view details</p>
+            </div>
+            <div class="flip-card-back rounded-2xl bg-secondary-600 p-6 text-white flex flex-col justify-center">
+              <h4 class="font-display text-lg font-bold">Creative Arts</h4>
+              <p class="mt-2 text-sm">Students express themselves through drawing, painting, and crafting, nurturing their creativity and imagination.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- School Choir Flip Card -->
+        <div class="flip-card h-80 rounded-2xl">
+          <div class="flip-card-inner rounded-2xl shadow-sm">
+            <div class="flip-card-front rounded-2xl bg-white p-6 border border-neutral-200 flex flex-col justify-center items-center text-center">
+              <div class="w-16 h-16 rounded-full bg-secondary/10 grid place-items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-secondary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z" /></svg></div>
+              <h4 class="font-display text-xl font-bold mt-4 text-neutral-900">School Choir</h4>
+              <p class="text-sm text-neutral-400 mt-2 font-medium">Click to view details</p>
+            </div>
+            <div class="flip-card-back rounded-2xl bg-secondary-600 p-6 text-white flex flex-col justify-center">
+              <h4 class="font-display text-lg font-bold">School Choir</h4>
+              <p class="mt-2 text-sm">Our choir provides a platform for learners to develop their vocal talents and perform at school events and community functions.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+ <!-- Donation Section -->
+<section id="donate" class="py-24 bg-neutral-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Logged Out View -->
+        <div class="logged-out-view text-center">
+            <h2 class="font-display text-3xl md:text-4xl font-extrabold text-neutral-900">Support Our Future Leaders</h2>
+            <p class="mt-4 text-neutral-600 max-w-2xl mx-auto">Your contribution provides essential resources for our students. Please create an account or log in to make a secure donation and help us build a brighter future.</p>
+            <div class="mt-8">
+                <button data-requires-auth class="rounded-lg bg-secondary-600 text-white px-8 py-4 font-semibold hover:bg-secondary transition-colors text-lg">Login to Donate</button>
+            </div>
+        </div>
+
+        <!-- Logged In View: Advanced Multi-Step Donation Portal -->
+        <div id="donation-portal" class="logged-in-view flex-col">
+            <div class="text-center">
+                <h2 class="font-display text-3xl md:text-4xl font-extrabold text-neutral-900">Make a Donation</h2>
+                <p class="mt-2 text-neutral-600 max-w-3xl mx-auto">Thank you for supporting Cisira Primary School. Your generosity empowers our learners. Please select a fund below to begin.</p>
+            </div>
+
+            <div id="donation-multistep-form" class="mt-12 max-w-4xl mx-auto bg-white rounded-2xl border border-neutral-200 shadow-sm">
+                <!-- Step Indicators -->
+                <div class="p-6 border-b border-neutral-200">
+                    <div class="flex justify-between items-center">
+                        <div class="step active text-center flex-1" data-step="1">
+                            <div class="w-10 h-10 mx-auto rounded-full bg-primary-800 text-white flex items-center justify-center font-bold">1</div>
+                            <p class="text-sm mt-2 font-semibold">Choose Impact</p>
+                        </div>
+                        <div class="flex-1 h-px bg-neutral-200"></div>
+                        <div class="step text-center flex-1" data-step="2">
+                            <div class="w-10 h-10 mx-auto rounded-full bg-neutral-200 text-neutral-500 flex items-center justify-center font-bold">2</div>
+                            <p class="text-sm mt-2 text-neutral-500">Your Details</p>
+                        </div>
+                        <div class="flex-1 h-px bg-neutral-200"></div>
+                        <div class="step text-center flex-1" data-step="3">
+                            <div class="w-10 h-10 mx-auto rounded-full bg-neutral-200 text-neutral-500 flex items-center justify-center font-bold">3</div>
+                            <p class="text-sm mt-2 text-neutral-500">Payment</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="donationForm" class="p-8" onsubmit="event.preventDefault();">
+                    <!-- Step 1: Choose Fund & Amount -->
+                    <div class="form-step active" data-step="1">
+                        <h3 class="font-display text-xl font-bold text-neutral-800">1. Select a Fund to Support</h3>
+                        <p class="text-neutral-600 mt-1">Choose where you'd like your donation to make a difference.</p>
+                        <div id="fund-selection" class="mt-6 grid sm:grid-cols-2 gap-4">
+                            <!-- Campaign Card -->
+                            <label class="border-2 rounded-lg p-4 cursor-pointer has-[:checked]:border-primary-600 has-[:checked]:ring-2 has-[:checked]:ring-primary-600">
+                                <input type="radio" name="campaign" value="general" class="sr-only" checked>
+                                <h4 class="font-bold">General School Fund</h4>
+                                <p class="text-sm text-neutral-500">Supports the school's most urgent needs.</p>
+                                <div class="mt-2 h-2 rounded-full bg-neutral-200"><div class="h-full bg-primary-600 rounded-full" style="width: 70%;"></div></div>
+                            </label>
+                            <!-- Campaign Card -->
+                            <label class="border-2 rounded-lg p-4 cursor-pointer has-[:checked]:border-primary-600 has-[:checked]:ring-2 has-[:checked]:ring-primary-600">
+                                <input type="radio" name="campaign" value="nutrition" class="sr-only">
+                                <h4 class="font-bold">Student Nutrition Program</h4>
+                                <p class="text-sm text-neutral-500">Provides daily nutritious meals for learners.</p>
+                                <div class="mt-2 h-2 rounded-full bg-neutral-200"><div class="h-full bg-secondary-600 rounded-full" style="width: 45%;"></div></div>
+                            </label>
+                            <!-- Campaign Card -->
+                            <label class="border-2 rounded-lg p-4 cursor-pointer has-[:checked]:border-primary-600 has-[:checked]:ring-2 has-[:checked]:ring-primary-600">
+                                <input type="radio" name="campaign" value="stationery" class="sr-only">
+                                <h4 class="font-bold">Stationery & Resource Drive</h4>
+                                <p class="text-sm text-neutral-500">Funds books, pens, and learning materials.</p>
+                                <div class="mt-2 h-2 rounded-full bg-neutral-200"><div class="h-full bg-yellow-500 rounded-full" style="width: 60%;"></div></div>
+                            </label>
+                             <!-- Campaign Card -->
+                            <label class="border-2 rounded-lg p-4 cursor-pointer has-[:checked]:border-primary-600 has-[:checked]:ring-2 has-[:checked]:ring-primary-600">
+                                <input type="radio" name="campaign" value="sports" class="sr-only">
+                                <h4 class="font-bold">Sports Development</h4>
+                                <p class="text-sm text-neutral-500">Helps purchase equipment and uniforms.</p>
+                                <div class="mt-2 h-2 rounded-full bg-neutral-200"><div class="h-full bg-red-500 rounded-full" style="width: 30%;"></div></div>
+                            </label>
+                        </div>
+                        <div class="mt-6">
+                            <label class="block text-sm font-medium text-neutral-700">Enter Amount (ZAR)</label>
+                            <input type="number" min="10" step="10" placeholder="e.g., 250" class="mt-1 w-full rounded-lg border-neutral-300 p-3 text-lg focus:border-primary-600 focus:ring-primary-600" required>
+                        </div>
+                    </div>
+
+                     <!-- Step 2: Your Details -->
+                    <div class="form-step hidden" data-step="2">
+                        <h3 class="font-display text-xl font-bold text-neutral-800">2. Your Details</h3>
+                        <div class="mt-6 grid sm:grid-cols-2 gap-4">
+                            <div><label class="block text-sm font-medium">First Name</label><input type="text" class="mt-1 w-full rounded-lg border-neutral-300 p-3" required></div>
+                            <div><label class="block text-sm font-medium">Last Name</label><input type="text" class="mt-1 w-full rounded-lg border-neutral-300 p-3" required></div>
+                            <div class="sm:col-span-2"><label class="block text-sm font-medium">Email Address</label><input type="email" class="mt-1 w-full rounded-lg border-neutral-300 p-3" required></div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Payment with Tabs -->
+                    <div class="form-step hidden" data-step="3">
+                        <h3 class="font-display text-xl font-bold text-neutral-800">3. Select Payment Method</h3>
+                        <div class="mt-4 border-b border-gray-200">
+                            <nav id="payment-tabs" class="-mb-px flex space-x-6" aria-label="Tabs">
+                                <!-- Card Tab -->
+                                <button type="button" data-tab="card" class="payment-tab active group inline-flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm text-primary-600 border-primary-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" /><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd" /></svg>
+                                    <span>Credit/Debit Card</span>
+                                </button>
+                                <!-- PayPal Tab -->
+                                <button type="button" data-tab="paypal" class="payment-tab group inline-flex items-center gap-2 py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                    <svg class="w-5 h-5" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="paypal" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M111.4 295.9c-3.5 19.2-17.4 108.7-21.5 134-.3 1.8-1 2.5-3 2.5H12.3c-7.6 0-13.1-6.6-12.1-13.9L58.8 46.6c1.5-9.6 10.1-16.9 20-16.9h85.3c20.1 0 37.8 8 50.1 22.8 12.2 14.8 17 32.7 12.9 51.1-4.1 18.3-19.9 31.9-39.7 31.9h-38.2c-7.8 0-14.9 4.9-17.2 12.2zM255.4 73.2c-4.3-16.7-24.8-26.7-42.4-23.4-17.6 3.3-32.7 17.5-37 34.2-4.3 16.7 5.2 34.1 22.8 37.4 17.6 3.3 37-3.7 41.3-20.4 4.3-16.7-5.2-34.1-22.8-37.4-1.1-.2-2.3-.4-3.5-.4-1.3 0-2.6.2-3.8.4-14.9 2.7-25.9 14.4-23.2 29.3 2.7 14.9 16.5 25.9 31.4 23.2 1.1.2 2.3.4 3.5.4 1.3 0 2.6-.2 3.8-.4 14.9-2.7 25.9-14.4 23.2-29.3zM358.2 25.2c-14.9-2.7-29.8 4.9-34.1 19.3-4.3 14.3 .1 29.8 14.9 32.5 1.1.2 2.3.4 3.5.4 1.3 0 2.6-.2 3.8-.4 14.9-2.7 25.9-14.4 23.2-29.3-2.7-14.9-16.5-25.9-31.4-23.2z"></path></svg>
+                                    <span>PayPal</span>
+                                </button>
+                                <!-- EFT Tab -->
+                                <button type="button" data-tab="eft" class="payment-tab group inline-flex items-center gap-2 py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
+                                    <span>Bank Transfer (EFT)</span>
+                                </button>
+                            </nav>
+                        </div>
+                        <div id="payment-content" class="mt-6">
+                            <!-- Card Content -->
+                            <div class="payment-panel active" data-tab="card">
+                                <div class="grid sm:grid-cols-2 gap-4">
+                                    <div><label class="block text-sm font-medium">Name on Card</label><input type="text" class="mt-1 w-full rounded-lg border-neutral-300 p-3" required /></div>
+                                    <div><label class="block text-sm font-medium">Card Number</label><input type="text" placeholder="•••• •••• •••• ••••" class="mt-1 w-full rounded-lg border-neutral-300 p-3" required /></div>
+                                    <div><label class="block text-sm font-medium">Expiry (MM/YY)</label><input type="text" placeholder="MM/YY" class="mt-1 w-full rounded-lg border-neutral-300 p-3" required /></div>
+                                    <div><label class="block text-sm font-medium">CVC</label><input type="text" placeholder="123" class="mt-1 w-full rounded-lg border-neutral-300 p-3" required /></div>
+                                </div>
+                            </div>
+                            <!-- PayPal Content -->
+                            <div class="payment-panel hidden" data-tab="paypal">
+                                <p class="text-neutral-600">You will be redirected to PayPal's secure website to complete your donation.</p>
+                                <button type="button" class="mt-4 inline-flex items-center justify-center rounded-lg bg-[#00457C] text-white px-8 py-4 font-semibold w-full">Pay with PayPal</button>
+                            </div>
+                            <!-- EFT Content -->
+                            <div class="payment-panel hidden" data-tab="eft">
+                                <p class="text-neutral-600">Please use the details below to make a direct deposit. Use your email address as the reference.</p>
+                                <div class="mt-4 p-4 bg-neutral-100 rounded-lg text-sm space-y-2">
+                                    <p><strong>Bank:</strong> First National Bank</p>
+                                    <p><strong>Account Name:</strong> Cisira Primary School Fund</p>
+                                    <p><strong>Account Number:</strong> 62000123456</p>
+                                    <p><strong>Branch Code:</strong> 250655</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 4: Confirmation -->
+                    <div class="form-step hidden text-center" data-step="4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <h3 class="font-display text-2xl font-bold text-neutral-800 mt-4">Thank You!</h3>
+                        <p class="text-neutral-600 mt-2">Your generous contribution has been processed successfully. A receipt has been sent to your registered email address. Your support makes a real difference in the lives of our learners.</p>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div id="form-navigation" class="mt-8 flex justify-between items-center">
+                        <button type="button" id="prev-btn" class="hidden rounded-lg border border-neutral-300 px-6 py-3 font-semibold hover:bg-neutral-100 transition-colors">Back</button>
+                        <button type="button" id="next-btn" class="ml-auto rounded-lg bg-primary-800 text-white px-6 py-3 font-semibold hover:bg-primary-700 transition-colors">Next Step</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+    
+        <!-- Contact Section with Google Map -->
+    <section id="contact" class="py-24 bg-white reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-start">
+                <div>
+                    <h2 class="font-display text-3xl md:text-4xl font-extrabold text-neutral-900">Get In Touch</h2>
+                    <p class="mt-4 text-neutral-600">Have a question or need more information? Our door is always open. Find us at the location below or send us a message through the form.</p>
+                     <div class="mt-8 rounded-xl bg-neutral-50 p-6 border border-neutral-200">
+                      <h3 class="font-display font-bold text-lg text-primary-800">School Office & Location</h3>
+                      <p class="mt-2 text-neutral-700"><strong>Address:</strong> Cisira Combined Primary School, Peddie, 5640</p>
+                      <p class="text-neutral-700"><strong>Principal:</strong> Mr. Rweqana</p>
+                      <p class="text-neutral-700"><strong>Phone:</strong> <a href="tel:+27839556614" class="text-primary-800 underline hover:text-primary-600">083 955 6614</a></p>
+                      
+                      <!-- Google Maps Iframe -->
+                      <div class="mt-4 aspect-video w-full h-80 rounded-lg overflow-hidden border border-neutral-200">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2605.0560878825027!2d27.144655074701994!3d-33.160615482726044!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e64204182d7226b%3A0x6ddf7d76d9a2c93a!2sCisira%20Combined%20Primary%20School!5e1!3m2!1sen!2sza!4v1756048827715!5m2!1sen!2sza" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                      </div>
+
+                    </div>
+                </div>
+                <div class="rounded-2xl bg-white p-8 border border-neutral-200 shadow-sm">
+                    <h3 class="font-display text-xl font-bold text-primary-800">Send us a Message</h3>
+                    <form class="mt-6 grid gap-5" onsubmit="event.preventDefault(); this.reset(); contactMsg.classList.remove('hidden');">
+                        <div>
+                            <label for="contact-name" class="block text-sm font-medium text-neutral-700">Your Name</label>
+                            <input required type="text" id="contact-name" class="mt-1 w-full rounded-lg border-neutral-300 px-4 py-2 focus:border-primary-600 focus:ring-primary-600" />
+                        </div>
+                        <div>
+                            <label for="contact-email" class="block text-sm font-medium text-neutral-700">Your Email</label>
+                            <input required type="email" id="contact-email" class="mt-1 w-full rounded-lg border-neutral-300 px-4 py-2 focus:border-primary-600 focus:ring-primary-600" />
+                        </div>
+                        <div>
+                            <label for="contact-message" class="block text-sm font-medium text-neutral-700">Message</label>
+                            <textarea required rows="5" id="contact-message" class="mt-1 w-full rounded-lg border-neutral-300 px-4 py-2 focus:border-primary-600 focus:ring-primary-600"></textarea>
+                        </div>
+                        <button class="w-full rounded-lg bg-primary-800 text-white px-5 py-3 font-semibold hover:bg-primary-700 transition-colors">Send Message</button>
+                        <p id="contactMsg" class="text-sm text-center text-green-700 font-medium hidden">Thank you! Your message has been sent (demo).</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>>
+  </main>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal invisible opacity-0 fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 p-4">
+      <div class="modal-content transform -translate-y-10 rounded-2xl bg-white p-8 border border-neutral-200 w-full max-w-md">
+          <div class="flex justify-between items-center"><h2 class="font-display text-2xl font-extrabold text-neutral-900">Login to Your Account</h2><button type="button" class="close-modal-btn p-1 rounded-full hover:bg-neutral-200 text-2xl font-light">&times;</button></div>
+          <form id="loginForm" class="mt-8 grid gap-5">
+              <div><label for="login-email" class="block text-sm font-medium text-neutral-700">Email</label><input required type="email" id="login-email" class="mt-1 w-full rounded-lg border-neutral-300 px-4 py-2" placeholder="you@example.com" /></div>
+              <div><label for="login-password" class="block text-sm font-medium text-neutral-700">Password</label><input required type="password" id="login-password" class="mt-1 w-full rounded-lg border-neutral-300 px-4 py-2" placeholder="••••••" /></div>
+              <button class="w-full rounded-lg bg-primary-800 text-white px-5 py-3 font-semibold hover:bg-primary-700">Login</button>
+              <p id="loginError" class="text-sm text-center text-red-600 font-medium hidden">Invalid email or password.</p>
+          </form>
+          <div class="mt-6"><div class="relative"><div class="absolute inset-0 flex items-center"><span class="w-full border-t"></span></div><div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-2 text-neutral-500">Or continue with</span></div></div><div class="mt-6 grid grid-cols-2 gap-3"><button class="social-login-btn inline-flex w-full justify-center items-center gap-3 rounded-lg border py-2.5 px-4 text-sm font-medium hover:bg-neutral-50"><svg class="w-5 h-5" aria-hidden="true" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 381.5 512 244 512 110.3 512 0 398.8 0 261.8 0 120.3 105.8 8 244 8c66.8 0 126 25.5 170.3 65.7l-59.7 59.7C334.5 106.5 293.5 88 244 88c-67.3 0-121.5 54.3-121.5 121.5s54.3 121.5 121.5 121.5c74.3 0 114.3-33.5 119.5-83.8H244v-71.2h244.5c2.3 12.7 3.5 25.8 3.5 39.8z"></path></svg>Google</button><button class="social-login-btn inline-flex w-full justify-center items-center gap-3 rounded-lg border py-2.5 px-4 text-sm font-medium hover:bg-neutral-50"><svg class="w-5 h-5" aria-hidden="true" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"></path></svg>Facebook</button></div></div>
+          <p class="mt-6 text-center text-sm">Don't have an account? <button id="switchToSignup" class="font-semibold text-primary-800 hover:underline">Sign up</button></p>
+      </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div id="signupModal" class="modal invisible opacity-0 fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 p-4">
+      <div class="modal-content transform -translate-y-10 rounded-2xl bg-white p-8 border border-neutral-200 w-full max-w-md">
+          <div class="flex justify-between items-center"><h2 class="font-display text-2xl font-extrabold text-neutral-900">Create an Account</h2><button type="button" class="close-modal-btn p-1 rounded-full hover:bg-neutral-200 text-2xl font-light">&times;</button></div>
+          <form id="signupForm" class="mt-8 grid gap-5">
+              <div class="grid grid-cols-2 gap-4"><div><label for="signup-firstname" class="block text-sm font-medium">First Name</label><input required type="text" id="signup-firstname" class="mt-1 w-full rounded-lg border-neutral-300" /></div><div><label for="signup-lastname" class="block text-sm font-medium">Last Name</label><input required type="text" id="signup-lastname" class="mt-1 w-full rounded-lg border-neutral-300" /></div></div>
+              <div><label for="signup-email" class="block text-sm font-medium">Email</label><input required type="email" id="signup-email" class="mt-1 w-full rounded-lg border-neutral-300" /></div>
+              <div><label for="signup-password" class="block text-sm font-medium">Password</label><input required type="password" id="signup-password" class="mt-1 w-full rounded-lg border-neutral-300" /></div>
+              <div><label for="signup-confirm-password" class="block text-sm font-medium">Confirm Password</label><input required type="password" id="signup-confirm-password" class="mt-1 w-full rounded-lg border-neutral-300" /></div>
+              <p id="signupError" class="text-sm text-center text-red-600 font-medium hidden"></p>
+              <div class="flex items-start gap-3"><input id="terms" type="checkbox" class="h-4 w-4 rounded border-neutral-300 mt-1"><label for="terms" class="text-sm text-neutral-600">I agree to the <a href="#" class="font-medium text-primary-800 hover:underline">Terms and Conditions</a>.</label></div>
+              <button id="signupSubmitBtn" type="submit" class="w-full rounded-lg bg-primary-800 text-white px-5 py-3 font-semibold transition-colors disabled:bg-primary-800/50 disabled:cursor-not-allowed">Create Account</button>
+              <p id="signupSuccess" class="text-sm text-center text-green-700 font-medium hidden">Account created! Please log in.</p>
+          </form>
+          <p class="mt-6 text-center text-sm">Already have an account? <button id="switchToLogin" class="font-semibold text-primary-800 hover:underline">Login</button></p>
+      </div>
+  </div>
+  
+   <!-- Footer -->
+  <footer class="bg-white border-t border-neutral-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid md:grid-cols-3 gap-8 text-sm">
+        <div class="space-y-2">
+          <p class="font-display font-bold text-neutral-800">Cisira Primary School</p>
+          <p class="text-neutral-600">Peddie, 5640</p>
+          <p class="text-neutral-600">South Africa</p>
+        </div>
+        <div class="grid grid-cols-2 gap-8">
+          <div>
+            <h4 class="font-semibold text-neutral-700 mb-2">Quick Links</h4>
+            <ul class="space-y-2 text-neutral-600">
+              <li><a href="#about" class="hover:underline hover:text-primary-800">About Us</a></li>
+              <li><a href="#academics" class="hover:underline hover:text-primary-800">Academics</a></li>
+              <li><a href="#contact" class="hover:underline hover:text-primary-800">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-neutral-700 mb-2">Information</h4>
+            <ul class="space-y-2 text-neutral-600">
+              <li><a href="#donate" class="hover:underline hover:text-primary-800">Donate</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="text-neutral-500">
+          <p>&copy; <span id="year"></span> Cisira Primary School. All Rights Reserved.</p>
+          
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- STATE & DOM ELEMENTS ---
+        const body = document.body;
+        const loginModal = document.getElementById('loginModal');
+        const signupModal = document.getElementById('signupModal');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        // --- MODAL CONTROLS ---
+        const openModal = (modal) => {
+            modal.classList.remove('invisible', 'opacity-0');
+            modal.querySelector('.modal-content').classList.remove('-translate-y-10');
+            body.style.overflow = 'hidden';
+        };
+        const closeModal = (modal) => {
+            if (!modal) return;
+            modal.classList.add('opacity-0');
+            modal.querySelector('.modal-content').classList.add('-translate-y-10');
+            setTimeout(() => {
+                modal.classList.add('invisible');
+                // Only restore scroll if no modals are visible
+                if (loginModal.classList.contains('invisible') && signupModal.classList.contains('invisible')) {
+                    body.style.overflow = 'auto';
+                }
+            }, 300);
+        };
+
+        // --- AUTHENTICATION LOGIC ---
+        const setLoggedInState = (user) => {
+            localStorage.setItem('cisiraUser', JSON.stringify(user));
+            body.classList.add('user-is-logged-in');
+            welcomeMessage.textContent = `Welcome, ${user.firstName}`;
+            closeModal(loginModal);
+            closeModal(signupModal);
+            updateMobileMenu();
+        };
+
+        const setLoggedOutState = () => {
+            localStorage.removeItem('cisiraUser');
+            body.classList.remove('user-is-logged-in');
+            welcomeMessage.textContent = '';
+            updateMobileMenu();
+        };
+
+        const checkLoginStatus = () => {
+            const user = JSON.parse(localStorage.getItem('cisiraUser'));
+            if (user) {
+                setLoggedInState(user);
+            } else {
+                setLoggedOutState();
+            }
+        };
+
+        // --- SIGNUP FORM VALIDATION ---
+        const signupForm = document.getElementById('signupForm');
+        const signupSubmitBtn = document.getElementById('signupSubmitBtn');
+        const signupError = document.getElementById('signupError');
+        const password = document.getElementById('signup-password');
+        const confirmPassword = document.getElementById('signup-confirm-password');
+        const terms = document.getElementById('terms');
+
+        const validateSignupForm = () => {
+            let isValid = true;
+            signupError.textContent = '';
+            signupError.classList.add('hidden');
+
+            if (password.value.length > 0 && password.value.length < 6) {
+                signupError.textContent = 'Password must be at least 6 characters.';
+                isValid = false;
+            } else if (password.value !== confirmPassword.value) {
+                signupError.textContent = 'Passwords do not match.';
+                isValid = false;
+            }
+            
+            if (!terms.checked) {
+                isValid = false;
+            }
+            
+            if(!isValid && signupError.textContent !== '') {
+                signupError.classList.remove('hidden');
+            }
+
+            signupSubmitBtn.disabled = !isValid;
+        };
+        signupForm.addEventListener('input', validateSignupForm);
+        
+        // --- MOBILE MENU ---
+        const updateMobileMenu = () => {
+            const isLoggedIn = body.classList.contains('user-is-logged-in');
+            let menuHTML = `<div class="px-4 pt-2 pb-4 space-y-1">
+                <a href="#about" class="nav-link block px-3 py-2 rounded-md">About</a>
+                <a href="#donate" class="nav-link block px-3 py-2 rounded-md">Donate</a>
+                <a href="#contact" class="nav-link block px-3 py-2 rounded-md">Contact</a>
+                <div class="border-t my-4"></div>`;
+            if (isLoggedIn) {
+                const user = JSON.parse(localStorage.getItem('cisiraUser'));
+                menuHTML += `<div class="px-3 py-2 text-neutral-600">Welcome, ${user.firstName}</div>
+                             <button id="logoutBtnMobile" class="block w-full text-left px-3 py-2 rounded-md font-semibold text-white bg-neutral-700">Logout</button>`;
+            } else {
+                menuHTML += `<button id="loginBtnMobile" class="block w-full text-left px-3 py-2 rounded-md">Login</button>
+                             <button id="signupBtnMobile" class="block w-full mt-2 text-left px-3 py-2 rounded-md font-semibold text-white bg-primary-800">Signup</button>`;
+            }
+            menuHTML += `</div>`;
+            mobileMenu.innerHTML = menuHTML;
+            attachDynamicListeners();
+        };
+
+        // --- EVENT LISTENERS ---
+        function attachDynamicListeners() {
+            // Desktop listeners
+            document.getElementById('loginBtn')?.addEventListener('click', () => openModal(loginModal));
+            document.getElementById('signupBtn')?.addEventListener('click', () => openModal(signupModal));
+            document.getElementById('logoutBtn')?.addEventListener('click', setLoggedOutState);
+            // Mobile listeners
+            document.getElementById('loginBtnMobile')?.addEventListener('click', () => openModal(loginModal));
+            document.getElementById('signupBtnMobile')?.addEventListener('click', () => openModal(signupModal));
+            document.getElementById('logoutBtnMobile')?.addEventListener('click', setLoggedOutState);
+            // Modal close buttons
+            document.querySelectorAll('.close-modal-btn').forEach(btn => btn.addEventListener('click', () => {
+                closeModal(loginModal);
+                closeModal(signupModal);
+            }));
+            // Modal switchers
+            document.getElementById('switchToSignup').addEventListener('click', () => { closeModal(loginModal); openModal(signupModal); });
+            document.getElementById('switchToLogin').addEventListener('click', () => { closeModal(signupModal); openModal(loginModal); });
+            // Auth-required actions
+            document.querySelectorAll('[data-requires-auth]').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    if (!body.classList.contains('user-is-logged-in')) {
+                        e.preventDefault(); openModal(loginModal);
+                    } else {
+                        // If user is logged in and clicks a link (like "Donate Now"), scroll to the section
+                        const targetId = el.getAttribute('href');
+                        if (targetId) {
+                            document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+            // Form Submissions
+            document.getElementById('loginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const storedUser = JSON.parse(localStorage.getItem(email));
+                const passwordInput = document.getElementById('login-password').value;
+                if (storedUser && storedUser.password === passwordInput) {
+                    setLoggedInState(storedUser);
+                } else {
+                    document.getElementById('loginError').classList.remove('hidden');
+                }
+            });
+            signupForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (signupSubmitBtn.disabled) return;
+                const user = {
+                    firstName: document.getElementById('signup-firstname').value,
+                    lastName: document.getElementById('signup-lastname').value,
+                    email: document.getElementById('signup-email').value,
+                    password: document.getElementById('signup-password').value // Store password for simulation
+                };
+                localStorage.setItem(user.email, JSON.stringify(user));
+                document.getElementById('signupSuccess').classList.remove('hidden');
+                setTimeout(() => { 
+                    closeModal(signupModal); 
+                    openModal(loginModal); 
+                    document.getElementById('signupSuccess').classList.add('hidden');
+                    signupForm.reset();
+                }, 2000);
+            });
+            // Social Logins
+            document.querySelectorAll('.social-login-btn').forEach(btn => btn.addEventListener('click', () => setLoggedInState({firstName: 'Valued Supporter'})));
+        }
+
+        // --- INITIALIZATION ---
+        checkLoginStatus(); // Check login status on page load
+        document.getElementById('menuBtn').addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        document.getElementById('year').textContent = new Date().getFullYear();
+    });
+	// Add this script to your main script tag at the bottom of the body
+    document.addEventListener('DOMContentLoaded', () => {
+        const donationFormContainer = document.getElementById('donation-multistep-form');
+        if (donationFormContainer) {
+            const nextBtn = donationFormContainer.querySelector('#next-btn');
+            const prevBtn = donationFormContainer.querySelector('#prev-btn');
+            const formNav = donationFormContainer.querySelector('#form-navigation');
+            const steps = Array.from(donationFormContainer.querySelectorAll('.form-step'));
+            const stepIndicators = Array.from(donationFormContainer.querySelectorAll('.step'));
+            let currentStep = 1;
+
+            const updateForm = () => {
+                steps.forEach(step => {
+                    const isCurrent = parseInt(step.dataset.step) === currentStep;
+                    step.classList.toggle('hidden', !isCurrent);
+                });
+
+                stepIndicators.forEach(indicator => {
+                    const stepNum = parseInt(indicator.dataset.step);
+                    const circle = indicator.querySelector('div');
+                    const text = indicator.querySelector('p');
+
+                    circle.classList.remove('bg-primary-800', 'text-white', 'bg-neutral-200', 'text-neutral-500');
+                    text.classList.remove('text-neutral-500', 'font-semibold');
+
+                    if (stepNum < currentStep) {
+                        circle.classList.add('bg-primary-800', 'text-white');
+                        circle.innerHTML = '&#10003;'; // Checkmark
+                        text.classList.add('font-semibold');
+                    } else if (stepNum === currentStep) {
+                        circle.classList.add('bg-primary-800', 'text-white');
+                        circle.innerHTML = stepNum;
+                        text.classList.add('font-semibold');
+                    } else {
+                        circle.classList.add('bg-neutral-200', 'text-neutral-500');
+                        circle.innerHTML = stepNum;
+                        text.classList.add('text-neutral-500');
+                    }
+                });
+
+                prevBtn.classList.toggle('hidden', currentStep === 1);
+                formNav.classList.toggle('hidden', currentStep === steps.length); // Hide nav on confirmation
+                
+                if (currentStep === steps.length - 1) { // Payment step
+                    nextBtn.textContent = 'Confirm Donation';
+                } else {
+                    nextBtn.textContent = 'Next Step';
+                }
+            };
+
+            nextBtn.addEventListener('click', () => {
+                if (currentStep < steps.length) {
+                    currentStep++;
+                    updateForm();
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    currentStep--;
+                    updateForm();
+                }
+            });
+
+            // Payment Tab Logic
+            const paymentTabs = donationFormContainer.querySelectorAll('.payment-tab');
+            const paymentPanels = donationFormContainer.querySelectorAll('.payment-panel');
+
+            paymentTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Deactivate all tabs and panels first
+                    paymentTabs.forEach(t => {
+                        t.classList.remove('active', 'text-primary-600', 'border-primary-600');
+                        t.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                    });
+                    paymentPanels.forEach(p => p.classList.add('hidden'));
+
+                    // Activate the clicked tab and its corresponding panel
+                    tab.classList.add('active', 'text-primary-600', 'border-primary-600');
+                    tab.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                    const targetPanel = donationFormContainer.querySelector(`.payment-panel[data-tab="${tab.dataset.tab}"]`);
+                    targetPanel.classList.remove('hidden');
+                });
+            });
+            
+            updateForm();
+        }
+    });
+  </script>
+</body>
+</html>
